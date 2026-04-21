@@ -7,6 +7,7 @@ const app = express();
 // 解析 JSON 格式的請求體
 app.use(express.json());
 console.log("DATABASE_URL =", process.env.DATABASE_URL);
+console.log("USER CHECK =", process.env.DATABASE_URL.split("@")[0]);
 //跨網域設定
 app.use(
   cors({

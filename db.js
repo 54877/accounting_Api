@@ -1,9 +1,13 @@
-import mysql from "mysql2";
+import pkg from "pg";
+const { Pool } = pkg;
+import "dotenv/config";
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Bb0955059329@",
-  database: "run_sql",
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
-export default db;
+
+export const query = (text, params) => pool.query(text, params);

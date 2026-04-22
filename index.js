@@ -16,7 +16,7 @@ app.use(
 // 測試路由：取得所有支出紀錄
 app.get("/api/expenses", async (req, res) => {
   try {
-    const result = await query("SELECT * FROM");
+    const result = await query("SELECT * FROM expenses");
     res.json(result.rows);
   } catch (err) {
     console.error(err);

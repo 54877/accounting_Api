@@ -6,8 +6,6 @@ const app = express();
 
 // 解析 JSON 格式的請求體
 app.use(express.json());
-console.log("DATABASE_URL =", process.env.DATABASE_URL);
-console.log("USER CHECK =", process.env.DATABASE_URL.split("@")[0]);
 //跨網域設定
 app.use(
   cors({
@@ -18,8 +16,33 @@ app.use(
 // 測試路由：取得所有支出紀錄
 app.get("/api/expenses", async (req, res) => {
   try {
-    const result = await query("SELECT * FROM expenses ORDER BY date DESC");
+    const result = await query("SELECT * FROM");
     res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "資料庫連線失敗" });
+  }
+});
+
+//新增紀錄
+app.post("/api/AddData", async (req, res) => {
+  try {
+    const { category, amount, description } = req.body;
+    if (!category?.trim() || !amount || !description?.trim()) {
+      return res.status(400).json({ error: "請填寫完整資料" });
+    }
+    const num = +amount;
+    if (Number.isNaN(num) || num <= 0) {
+      return res.status(400).json({ error: "請填寫正確金額" });
+    }
+    const result = await query(
+      "INSERT INTO expenses (category , amount , description) VALUES ($1 , $2 , $3)  RETURNING *",
+      [category, amount, description],
+    );
+    res.status(201).json({
+      message: "資料新增成功",
+      dataSet: result.rows[0],
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "資料庫連線失敗" });

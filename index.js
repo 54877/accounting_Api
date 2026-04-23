@@ -23,7 +23,7 @@ app.get("/api/expenses", async (req, res) => {
         SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) AS balance
      FROM expenses`);
 
-    res.json({ dataSet: result.rows, sumData: sumData.rows[0] });
+    res.json({ dataSet: result.rows, sumData: sumData.rows });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "資料庫連線失敗" });
@@ -47,7 +47,7 @@ app.post("/api/AddData", async (req, res) => {
     );
     res.status(201).json({
       message: "資料新增成功",
-      dataSet: result.rows,
+      dataSet: result.rows[0],
     });
   } catch (err) {
     console.error(err);

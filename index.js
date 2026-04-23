@@ -18,10 +18,10 @@ app.get("/api/expenses", async (req, res) => {
   try {
     const result = await query("SELECT * FROM expenses");
     const sumData = await query(`SELECT 
-        SUM(CASE type WHEN 'income' THEN amount ELSE 0 END) AS incomeTotal,
-        SUM(CASE type WHEN 'expense' THEN amount ELSE 0 END) AS expenseTotal,
-        SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) AS balance
-     FROM expenses`);
+      SUM(CASE WHEN type='income' THEN amount ELSE 0 END) AS "incomeTotal",
+      SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS "expenseTotal",
+      SUM(CASE WHEN type='income' THEN amount ELSE -amount END) AS "balance"
+      FROM expenses`);
 
     res.json({ dataSet: result.rows, sumData: sumData.rows[0] });
   } catch (err) {

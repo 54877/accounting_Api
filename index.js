@@ -43,7 +43,7 @@ app.post("/api/AddData", async (req, res) => {
     }
     const result = await query(
       "INSERT INTO expenses (category , amount , description , type) VALUES ($1 , $2 , $3 , $4)  RETURNING *",
-      [category, amount, description, "expense"],
+      [category, amount, description, "type"],
     );
     res.status(201).json({
       message: "資料新增成功",

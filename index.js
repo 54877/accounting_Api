@@ -23,7 +23,7 @@ app.get("/api/expenses", async (req, res) => {
         SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) AS balance
      FROM expenses`);
 
-    res.json({ dataSet: result.rows, sumData: sumData.rows });
+    res.json({ dataSet: result.rows, sumData: sumData.rows[0] });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "資料庫連線失敗" });

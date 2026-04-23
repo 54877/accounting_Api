@@ -33,7 +33,7 @@ app.get("/api/expenses", async (req, res) => {
 //新增紀錄
 app.post("/api/AddData", async (req, res) => {
   try {
-    const { category, amount, description } = req.body;
+    const { category, amount, description, type } = req.body;
     if (!category?.trim() || !amount || !description?.trim()) {
       return res.status(400).json({ error: "請填寫完整資料" });
     }
@@ -43,7 +43,7 @@ app.post("/api/AddData", async (req, res) => {
     }
     const result = await query(
       "INSERT INTO expenses (category , amount , description , type) VALUES ($1 , $2 , $3 , $4)  RETURNING *",
-      [category, amount, description, "type"],
+      [category, amount, description, type],
     );
     res.status(201).json({
       message: "資料新增成功",

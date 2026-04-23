@@ -47,7 +47,7 @@ app.post("/api/AddData", async (req, res) => {
     );
     res.status(201).json({
       message: "資料新增成功",
-      dataSet: result.rows[0],
+      dataSet: result.rows,
     });
   } catch (err) {
     console.error(err);

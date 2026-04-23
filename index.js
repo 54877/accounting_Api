@@ -22,6 +22,7 @@ app.get("/api/expenses", async (req, res) => {
         SUM(CASE type WHEN 'expense' THEN amount ELSE 0 END) AS expenseTotal,
         SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) AS balance
      FROM expenses`);
+
     res.json({ dataSet: result.rows, sumData: sumData.rows[0] });
   } catch (err) {
     console.error(err);
@@ -41,8 +42,8 @@ app.post("/api/AddData", async (req, res) => {
       return res.status(400).json({ error: "請填寫正確金額" });
     }
     const result = await query(
-      "INSERT INTO expenses (category , amount , description) VALUES ($1 , $2 , $3)  RETURNING *",
-      [category, amount, description],
+      "INSERT INTO expenses (category , amount , description , type) VALUES ($1 , $2 , $3 , $4)  RETURNING *",
+      [category, amount, description, "expense"],
     );
     res.status(201).json({
       message: "資料新增成功",

@@ -84,6 +84,39 @@ app.delete(`/api/deleteData/:id`, async (req, res) => {
   }
 });
 
+//編輯記錄
+app.put(`/api/updata/:id`, async (req, res) => {
+  try {
+    const { key, value } = req.body;
+    const { id } = req.params;
+
+    const allowed = ["category", "amount", "description", "type"];
+    if (!allowed.includes(key)) {
+      return res.status(400).json({ error: "欄位異常" });
+    }
+
+    const result = await query(
+      `
+        UPDATE expenses
+        SET
+          ${key} = $1
+        WHERE id = $2
+      `,
+      [value, id],
+    );
+    res.status(200).json({
+      message: "更新成功",
+      state: "true",
+      data: result.rows[0],
+    });
+  } catch (err) {
+    console.err(err);
+    res.status(500).json({
+      error: "資料庫連線失敗",
+    });
+  }
+});
+
 // 啟動伺服器
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

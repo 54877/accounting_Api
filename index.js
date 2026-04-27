@@ -22,7 +22,6 @@ app.get("/api/expenses", async (req, res) => {
       SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS "expenseTotal",
       SUM(CASE WHEN type='income' THEN amount ELSE -amount END) AS "balance"
       FROM expenses`);
-
     res.json({ dataSet: result.rows, sumData: sumData.rows[0] });
   } catch (err) {
     console.error(err);
@@ -52,6 +51,36 @@ app.post("/api/AddData", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "資料庫連線失敗" });
+  }
+});
+
+//刪除紀錄
+app.delete(`/api/deleteData/:id`, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await query(
+      `DELETE FROM expenses
+      WHERE id=$1
+      RETURNING *
+      `,
+      [id],
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        message: "找不到資料",
+        state: false,
+      });
+    }
+
+    res.status(200).json({
+      message: "資料刪除成功",
+      state: "true",
+      data: result.rows[0],
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "資料庫連接失敗" });
   }
 });
 

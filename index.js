@@ -122,6 +122,13 @@ app.put(`/api/update/:id`, async (req, res) => {
     if (result.rowCount === 0) {
       return res.status(404).json({
         error: "找不到資料，更新失敗",
+        data: console.log({
+          id,
+          key,
+          value,
+          rowCount: result.rowCount,
+          rows: result.rows,
+        }),
       });
     }
     res.status(200).json({

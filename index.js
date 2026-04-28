@@ -2,6 +2,12 @@ import { query } from "./db.js";
 import express from "express";
 import cors from "cors";
 
+//TODO 不易擴充
+//TODO 邏輯不清晰
+//TODO 規則不夠集中
+//TODO 做JAVA SPRING版
+//先把所有功能做出來 再升級最後才做JAVA SPRING
+
 const app = express();
 
 // 解析 JSON 格式的請求體
@@ -112,10 +118,22 @@ app.put(`/api/update/:id`, async (req, res) => {
       `,
       [value, id],
     );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        error: "找不到資料，更新失敗",
+      });
+    }
     res.status(200).json({
       message: "更新成功",
       state: true,
-      data: result.rows[0],
+      data: console.log({
+        id,
+        key,
+        value,
+        rowCount: result.rowCount,
+        rows: result.rows,
+      }),
     });
   } catch (err) {
     console.error(err);

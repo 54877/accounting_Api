@@ -85,13 +85,20 @@ app.delete(`/api/deleteData/:id`, async (req, res) => {
 });
 
 //編輯記錄
-app.put(`/api/updata/:id`, async (req, res) => {
+app.put(`/api/update/:id`, async (req, res) => {
   try {
     const { key, value } = req.body;
     const { id } = req.params;
 
-    const allowed = ["category", "amount", "description", "type"];
-    if (!allowed.includes(key)) {
+    const allowedMap = {
+      category: "category",
+      amount: "amount",
+      description: "description",
+      type: "type",
+    };
+    const allowed = allowedMap[key];
+
+    if (!allowed) {
       return res.status(400).json({ error: "欄位異常" });
     }
 
@@ -99,18 +106,19 @@ app.put(`/api/updata/:id`, async (req, res) => {
       `
         UPDATE expenses
         SET
-          ${key} = $1
+          ${allowed} = $1
         WHERE id = $2
+        RETURNING *
       `,
       [value, id],
     );
     res.status(200).json({
       message: "更新成功",
-      state: "true",
+      state: true,
       data: result.rows[0],
     });
   } catch (err) {
-    console.err(err);
+    console.error(err);
     res.status(500).json({
       error: "資料庫連線失敗",
     });

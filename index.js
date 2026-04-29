@@ -48,7 +48,7 @@ app.post("/api/AddData", async (req, res) => {
       return res.status(400).json({ error: "請填寫正確金額" });
     }
 
-    if (!date || !dayjs(date).isValid()) {
+    if (!date || !dayjs(date, "YYYY-MM-DD", true).isValid()) {
       return res.status(400).json({ error: "請填寫正確日期" });
     }
 

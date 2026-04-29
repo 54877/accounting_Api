@@ -48,13 +48,12 @@ app.post("/api/AddData", async (req, res) => {
       return res.status(400).json({ error: "請填寫正確金額" });
     }
     console.log(date);
-    if (
-      typeof date !== "string" ||
-      !/^\d{4}-\d{2}/.test(date) ||
-      !dayjs(date, "YYYY-MM-DD", true).isValid()
-    ) {
+    const d = dayjs(date);
+
+    if (!d.isValid()) {
       return res.status(400).json({ error: "請填寫正確日期" });
     }
+
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
 
     const result = await query(

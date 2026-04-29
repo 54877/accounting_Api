@@ -52,9 +52,11 @@ app.post("/api/AddData", async (req, res) => {
       return res.status(400).json({ error: "請填寫正確日期" });
     }
 
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
     const result = await query(
       "INSERT INTO expenses (category , amount , description , type , date) VALUES ($1 , $2 , $3 , $4 , $5)  RETURNING *",
-      [category, amount, description, type, date],
+      [category, amount, description, type, formattedDate],
     );
     res.status(201).json({
       message: "資料新增成功",

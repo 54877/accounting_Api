@@ -38,7 +38,7 @@ app.get("/api/expenses", async (req, res) => {
 //新增紀錄
 app.post("/api/AddData", async (req, res) => {
   try {
-    const { category, amount, description, type } = req.body;
+    const { category, amount, description, type, date } = req.body;
     if (!category?.trim() || !amount || !description?.trim()) {
       return res.status(400).json({ error: "請填寫完整資料" });
     }
@@ -46,6 +46,11 @@ app.post("/api/AddData", async (req, res) => {
     if (Number.isNaN(num) || num <= 0) {
       return res.status(400).json({ error: "請填寫正確金額" });
     }
+
+    if (!date || !dayjs(date).isValid()) {
+      return res.status(400).json({ error: "請填寫正確日期" });
+    }
+
     const result = await query(
       "INSERT INTO expenses (category , amount , description , type) VALUES ($1 , $2 , $3 , $4)  RETURNING *",
       [category, amount, description, type],
@@ -118,18 +123,13 @@ app.put(`/api/update/:id`, async (req, res) => {
       `,
       [value, id],
     );
-    console.log({
-      id,
-      key,
-      value,
-      rowCount: result.rowCount,
-      rows: result.rows,
-    });
+
     if (result.rowCount === 0) {
       return res.status(404).json({
         error: "找不到資料，更新失敗",
       });
     }
+
     res.status(200).json({
       message: "更新成功",
       state: true,

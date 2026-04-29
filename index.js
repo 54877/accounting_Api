@@ -48,10 +48,11 @@ app.post("/api/AddData", async (req, res) => {
       return res.status(400).json({ error: "請填寫正確金額" });
     }
 
-    if (typeof date !== "string") {
-      return res.status(400).json({ error: "日期格式錯誤" });
-    }
-    if (!date || !dayjs(date, "YYYY-MM-DD", true).isValid()) {
+    if (
+      typeof date !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+      !dayjs(date, "YYYY-MM-DD", true).isValid()
+    ) {
       return res.status(400).json({ error: "請填寫正確日期" });
     }
     const formattedDate = dayjs(date).format("YYYY-MM-DD");

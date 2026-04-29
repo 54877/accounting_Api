@@ -47,6 +47,7 @@ app.post("/api/AddData", async (req, res) => {
     if (Number.isNaN(num) || num <= 0) {
       return res.status(400).json({ error: "請填寫正確金額" });
     }
+    console.log("date:", date, typeof date);
 
     if (!date || !dayjs(date, "YYYY-MM-DD", true).isValid()) {
       return res.status(400).json({ error: "請填寫正確日期" });

@@ -47,13 +47,14 @@ app.post("/api/AddData", async (req, res) => {
     if (Number.isNaN(num) || num <= 0) {
       return res.status(400).json({ error: "請填寫正確金額" });
     }
-    console.log(date);
-    const d = dayjs(date);
 
-    if (!d.isValid()) {
+    if (
+      typeof date !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+      !dayjs(date, "YYYY-MM-DD", true).isValid()
+    ) {
       return res.status(400).json({ error: "請填寫正確日期" });
     }
-
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
 
     const result = await query(
@@ -111,11 +112,44 @@ app.put(`/api/update/:id`, async (req, res) => {
       amount: "amount",
       description: "description",
       type: "type",
+      time: "date",
+    };
+
+    const errorMap = {
+      category: "項目",
+      amount: "金額",
+      description: "標籤",
+      type: "類型",
+      time: "日期",
     };
     const allowed = allowedMap[key];
-
+    const errorMessage = errorMap[key];
     if (!allowed) {
       return res.status(400).json({ error: "欄位異常" });
+    }
+
+    if (typeof value === "string" && !value.trim()) {
+      return res.status(400).json({ error: `請填寫完整${errorMessage}` });
+    }
+
+    if (allowed == "amount") {
+      const num = +value;
+      if (Number.isNaN(num) || num <= 0) {
+        return res.status(400).json({ error: "請填寫正確金額" });
+      }
+      value = num;
+    }
+
+    if (allowed == "date") {
+      if (
+        typeof value !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
+        !dayjs(value, "YYYY-MM-DD", true).isValid()
+      ) {
+        return res.status(400).json({ error: "請填寫正確日期" });
+      }
+
+      value = dayjs(value).format("YYYY-MM-DD");
     }
 
     const result = await query(
@@ -138,13 +172,6 @@ app.put(`/api/update/:id`, async (req, res) => {
     res.status(200).json({
       message: "更新成功",
       state: true,
-      data: console.log({
-        id,
-        key,
-        value,
-        rowCount: result.rowCount,
-        rows: result.rows,
-      }),
     });
   } catch (err) {
     console.error(err);

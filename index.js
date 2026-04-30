@@ -105,7 +105,7 @@ app.delete(`/api/deleteData/:id`, async (req, res) => {
 //編輯記錄
 app.put(`/api/update/:id`, async (req, res) => {
   try {
-    const { key, value } = req.body;
+    let { key, value } = req.body;
     const { id } = req.params;
 
     const allowedMap = {

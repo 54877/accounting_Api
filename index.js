@@ -40,6 +40,7 @@ app.get("/api/expenses", async (req, res) => {
 app.post("/api/AddData", async (req, res) => {
   try {
     const { category, amount, description, type, date } = req.body;
+
     if (!category?.trim() || !amount || !description?.trim()) {
       return res.status(400).json({ error: "請填寫完整資料" });
     }

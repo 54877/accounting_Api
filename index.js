@@ -32,7 +32,7 @@ app.get("/api/expenses", async (req, res) => {
 
     const grouped = result.rows.reduce((acc, item) => {
       if (!acc[item.category]) {
-        acc[item.category] = "0";
+        acc[item.category] = 0;
       }
       acc[item.category] += item.amount;
       return acc;

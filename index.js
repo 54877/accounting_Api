@@ -35,11 +35,15 @@ app.get("/api/expenses", async (req, res) => {
         FROM expenses
         GROUP BY category
         `);
+    const categoryObj = Object.fromEntries(
+      categoryType.rows.map((item) => [item.category, Number(item.total)]),
+    );
 
     res.json({
       dataSet: result.rows,
       sumData: sumData.rows[0],
-      categoryType: categoryType,
+      categoryType: categoryType.rows,
+      categoryObj: categoryObj,
       message: "資料取得成功",
     });
   } catch (err) {

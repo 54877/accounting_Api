@@ -31,10 +31,10 @@ app.get("/api/expenses", async (req, res) => {
       FROM expenses`);
 
     const grouped = result.rows.reduce((acc, item) => {
-      if (!acc[item.category]) {
-        acc[item.category] = 0;
+      if (!acc[+item.category]) {
+        acc[+item.category] = 0;
       }
-      acc[item.category] += item.amount;
+      acc[+item.category] += +item.amount;
       return acc;
     }, {});
 

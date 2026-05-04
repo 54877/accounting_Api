@@ -113,7 +113,7 @@ app.put(`/api/update/:id`, async (req, res) => {
       amount: "amount",
       description: "description",
       type: "type",
-      time: "date",
+      date: "date",
     };
 
     const errorMap = {
@@ -121,7 +121,7 @@ app.put(`/api/update/:id`, async (req, res) => {
       amount: "金額",
       description: "標籤",
       type: "類型",
-      time: "日期",
+      date: "日期",
     };
     const allowed = allowedMap[key];
     const errorMessage = errorMap[key];

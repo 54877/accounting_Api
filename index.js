@@ -29,7 +29,21 @@ app.get("/api/expenses", async (req, res) => {
       SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS "expenseTotal",
       SUM(CASE WHEN type='income' THEN amount ELSE -amount END) AS "balance"
       FROM expenses`);
-    res.json({ dataSet: result.rows, sumData: sumData.rows[0] });
+
+    const grouped = result.rows.reduce((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = "0";
+      }
+      acc[item.category] += item.amount;
+      return acc;
+    }, {});
+
+    res.json({
+      dataSet: result.rows,
+      sumData: sumData.rows[0],
+      categoryType: grouped,
+      message: "資料取得成功",
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "資料庫連線失敗" });

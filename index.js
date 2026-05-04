@@ -30,18 +30,16 @@ app.get("/api/expenses", async (req, res) => {
       SUM(CASE WHEN type='income' THEN amount ELSE -amount END) AS "balance"
       FROM expenses`);
 
-    const grouped = result.rows.reduce((acc, item) => {
-      if (!acc[+item.category]) {
-        acc[+item.category] = 0;
-      }
-      acc[+item.category] += +item.amount;
-      return acc;
-    }, {});
+    const categoryType = await query(`
+        SELECT category, SUM(amount) AS total
+        FROM expenses
+        GROUP BY category
+        `);
 
     res.json({
       dataSet: result.rows,
       sumData: sumData.rows[0],
-      categoryType: grouped,
+      categoryType: categoryType.rows,
       message: "資料取得成功",
     });
   } catch (err) {

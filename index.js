@@ -44,6 +44,7 @@ app.get("/api/expenses", async (req, res) => {
       dataSet: result.rows,
       sumData: sumData.rows[0],
       categoryObj: categoryObj,
+      state: true,
       message: "資料取得成功",
     });
   } catch (err) {
@@ -79,7 +80,8 @@ app.post("/api/AddData", async (req, res) => {
       [category, amount, description, type, formattedDate],
     );
     res.status(201).json({
-      message: "資料新增成功",
+      state: true,
+      message: "資料取得成功",
       dataSet: result.rows[0],
     });
   } catch (err) {

@@ -33,6 +33,7 @@ app.get("/api/expenses", async (req, res) => {
     const categoryType = await query(`
         SELECT category, SUM(amount) AS total
         FROM expenses
+        WHERE type = 'EXPENSE'
         GROUP BY category
         `);
     const categoryObj = Object.fromEntries(

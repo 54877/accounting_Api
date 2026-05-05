@@ -43,7 +43,6 @@ app.get("/api/expenses", async (req, res) => {
     res.json({
       dataSet: result.rows,
       sumData: sumData.rows[0],
-      categoryType: categoryType.rows,
       categoryObj: categoryObj,
       message: "資料取得成功",
     });

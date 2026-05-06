@@ -27,9 +27,9 @@ app.get("/api/expenses", async (req, res) => {
     let { start, end } = req.query;
     const now = dayjs();
 
-    if (start && !end) {
+    if (start && end == "") {
       end = now.format("YYYY-MM-DD");
-    } else if (!start && end) {
+    } else if (start == "" && end) {
       start = now.startOf("month").format("YYYY-MM-DD");
     } else {
       start = now.startOf("month").format("YYYY-MM-DD");

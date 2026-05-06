@@ -63,18 +63,25 @@ app.get("/api/expenses", async (req, res) => {
       `,
       [start, end],
     );
-    const sumData = await query(`SELECT 
+    const sumData = await query(
+      `SELECT 
       SUM(CASE WHEN type='income' THEN amount ELSE 0 END) AS "incomeTotal",
       SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS "expenseTotal",
       SUM(CASE WHEN type='income' THEN amount ELSE -amount END) AS "balance"
-      FROM expenses`);
+      FROM expenses
+      WHERE date >= $1 AND date <= $2`,
+      [start, end],
+    );
 
-    const categoryType = await query(`
+    const categoryType = await query(
+      `
         SELECT category, SUM(amount) AS total
         FROM expenses
-        WHERE type = 'expense'
+        WHERE type = 'expense' AND date >= $1 AND date <= $2
         GROUP BY category
-        `);
+        `,
+      [start, end],
+    );
     const categoryObj = Object.fromEntries(
       categoryType.rows.map((item) => [item.category, Number(item.total)]),
     );

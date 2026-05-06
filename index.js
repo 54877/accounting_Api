@@ -2,6 +2,7 @@ import { query } from "./db.js";
 import express from "express";
 import cors from "cors";
 import dayjs from "dayjs";
+import e from "express";
 
 //TODO 不易擴充
 //TODO 邏輯不清晰
@@ -23,7 +24,45 @@ app.use(
 // 測試路由：取得所有支出紀錄
 app.get("/api/expenses", async (req, res) => {
   try {
-    const result = await query("SELECT * FROM expenses");
+    let { start, end } = req.query;
+    const now = dayjs();
+
+    if (start && !end) {
+      end = now.format("YYYY-MM-DD");
+    } else if (!start && end) {
+      start = now.startOf("month").format("YYYY-MM-DD");
+    } else {
+      start = now.startOf("month").format("YYYY-MM-DD");
+      end = now.format("YYYY-MM-DD");
+    }
+
+    if (
+      typeof start !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(start) ||
+      !dayjs(start, "YYYY-MM-DD", true).isValid()
+    ) {
+      return res.status(400).json({ error: "請填寫正確的開始日期" });
+    }
+
+    if (
+      typeof end !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(end) ||
+      !dayjs(end, "YYYY-MM-DD", true).isValid()
+    ) {
+      return res.status(400).json({ error: "請填寫正確的結束日期" });
+    }
+
+    if (dayjs(start).isAfter(dayjs(end))) {
+      return res.status(400).json({ error: "開始日期不能大於結束日期" });
+    }
+
+    const result = await query(
+      `SELECT * FROM expenses
+       WHERE date >= $1 AND date <= $2
+       ORDER BY date ASC
+      `,
+      [start, end],
+    );
     const sumData = await query(`SELECT 
       SUM(CASE WHEN type='income' THEN amount ELSE 0 END) AS "incomeTotal",
       SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS "expenseTotal",
@@ -68,7 +107,7 @@ app.post("/api/AddData", async (req, res) => {
 
     if (
       typeof date !== "string" ||
-      !/^\d{4}-\d{2}/.test(date) ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
       !dayjs(date, "YYYY-MM-DD", true).isValid()
     ) {
       return res.status(400).json({ error: "請填寫正確日期" });

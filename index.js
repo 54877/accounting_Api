@@ -28,15 +28,13 @@ app.get("/api/expenses", async (req, res) => {
     const now = dayjs();
     start = start === "" ? undefined : start;
     end = end === "" ? undefined : end;
-    if (start && end) {
-      if (start && !end) {
-        end = now.format("YYYY-MM-DD");
-      } else if (!start && end) {
-        start = now.startOf("month").format("YYYY-MM-DD");
-      } else {
-        start = now.startOf("month").format("YYYY-MM-DD");
-        end = now.format("YYYY-MM-DD");
-      }
+    if (!start && !end) {
+      start = now.startOf("month").format("YYYY-MM-DD");
+      end = now.format("YYYY-MM-DD");
+    } else if (start && !end) {
+      end = now.format("YYYY-MM-DD");
+    } else if (!start && end) {
+      start = now.startOf("month").format("YYYY-MM-DD");
     }
 
     if (

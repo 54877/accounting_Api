@@ -55,7 +55,8 @@ app.get("/api/expenses", async (req, res) => {
     if (dayjs(start).isAfter(dayjs(end))) {
       return res.status(400).json({ error: "開始日期不能大於結束日期" });
     }
-
+    console.log("start", start);
+    console.log("end", end);
     const result = await query(
       `SELECT * FROM expenses
        WHERE date >= $1 AND date <= $2

@@ -3,25 +3,21 @@ import express from "express";
 import cors from "cors";
 import dayjs from "dayjs";
 import e from "express";
+import app from "./app.js";
 
 //TODO 不易擴充
 //TODO 邏輯不清晰
 //TODO 規則不夠集中
 //TODO 做JAVA SPRING版
-//先把所有功能做出來 再升級最後才做JAVA SPRING
 
-const app = express();
-
-// 解析 JSON 格式的請求體
-app.use(express.json());
-//跨網域設定
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://54877.github.io"],
-  }),
-);
-
-// 測試路由：取得所有支出紀錄
+const dateRule = (day) => {
+  return (
+    typeof day !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(day) ||
+    !dayjs(day, "YYYY-MM-DD", true).isValid()
+  );
+};
+// 取得所有支出紀錄
 app.get("/api/expenses", async (req, res) => {
   try {
     let { start, end } = req.query;
@@ -36,22 +32,12 @@ app.get("/api/expenses", async (req, res) => {
     } else if (!start && end) {
       start = now.startOf("month").format("YYYY-MM-DD");
     }
-    console.log("before:", req.query);
-    console.log("after:", start, end);
 
-    if (
-      typeof start !== "string" ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(start) ||
-      !dayjs(start, "YYYY-MM-DD", true).isValid()
-    ) {
+    if (dateRule(start)) {
       return res.status(400).json({ error: "請填寫正確的開始日期" });
     }
 
-    if (
-      typeof end !== "string" ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(end) ||
-      !dayjs(end, "YYYY-MM-DD", true).isValid()
-    ) {
+    if (dateRule(end)) {
       return res.status(400).json({ error: "請填寫正確的結束日期" });
     }
 
@@ -208,11 +194,7 @@ app.put(`/api/update/:id`, async (req, res) => {
     }
 
     if (allowed == "date") {
-      if (
-        typeof value !== "string" ||
-        !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
-        !dayjs(value, "YYYY-MM-DD", true).isValid()
-      ) {
+      if (dateRule(value)) {
         return res.status(400).json({ error: "請填寫正確日期" });
       }
 
@@ -246,10 +228,4 @@ app.put(`/api/update/:id`, async (req, res) => {
       error: "資料庫連線失敗",
     });
   }
-});
-
-// 啟動伺服器
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`伺服器已啟動：http://localhost:${PORT}`);
 });

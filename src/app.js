@@ -1,3 +1,5 @@
+import express from "express";
+
 const app = express();
 
 // 解析 JSON 格式的請求體

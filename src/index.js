@@ -1,3 +1,4 @@
+// @ts-check
 import { query } from "./db.js";
 import dayjs from "dayjs";
 import app from "./app.js";
@@ -18,6 +19,7 @@ const dateRule = (day) => {
 app.get("/api/expenses", async (req, res) => {
   try {
     let { start, end } = req.query;
+
     const now = dayjs();
     start = start === "" ? undefined : start;
     end = end === "" ? undefined : end;
@@ -70,7 +72,8 @@ app.get("/api/expenses", async (req, res) => {
     const categoryObj = Object.fromEntries(
       categoryType.rows.map((item) => [item.category, Number(item.total)]),
     );
-
+    console.log("QUERY:", req.query);
+    console.log("RESULT:", result.rows);
     res.json({
       dataSet: result.rows,
       sumData: sumData.rows[0],

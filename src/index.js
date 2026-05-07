@@ -1,6 +1,4 @@
 import { query } from "./db.js";
-import express from "express";
-import cors from "cors";
 import dayjs from "dayjs";
 import app from "./app.js";
 

@@ -23,31 +23,18 @@ export const getData = async (req, res) => {
 
 export const AddData = async (req, res) => {
   const { category, amount, description, type, date } = req.body;
-
-  if (!category?.trim() || !amount || !description?.trim()) {
-    return res.status(400).json({ error: "請填寫完整資料" });
-  }
-  const num = +amount;
-  if (Number.isNaN(num) || num <= 0) {
-    return res.status(400).json({ error: "請填寫正確金額" });
-  }
-
-  if (dateRule(date)) {
-    return res.status(400).json({ error: "請填寫正確日期" });
-  }
-  const formattedDate = dayjs(date).format("YYYY-MM-DD");
   const result = await insertAddDataDb(
     category,
     amount,
     description,
     type,
-    formattedDate,
+    date,
   );
 
   res.status(201).json({
+    dataSet: result,
     state: true,
     message: "資料取得成功",
-    dataSet: result,
   });
 };
 
@@ -68,6 +55,7 @@ export const deleteData = async (req, res) => {
     data: result,
   });
 };
+
 export const updateData = async (req, res) => {
   let { key, value } = req.body;
   const { id } = req.params;

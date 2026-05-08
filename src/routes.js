@@ -1,13 +1,11 @@
-// @ts-check
 import { query } from "./db.js";
 import dayjs from "dayjs";
-import app from "./app.js";
-
+import express from "express";
 //TODO 不易擴充
 //TODO 邏輯不清晰
 //TODO 規則不夠集中
 //TODO 做JAVA SPRING版
-
+const router = express.Router();
 const dateRule = (day) => {
   return (
     typeof day !== "string" ||
@@ -16,7 +14,7 @@ const dateRule = (day) => {
   );
 };
 // 取得所有支出紀錄
-app.get("/api/expenses", async (req, res) => {
+router.get("/expenses", async (req, res) => {
   try {
     let { start, end } = req.query;
 
@@ -88,7 +86,7 @@ app.get("/api/expenses", async (req, res) => {
 });
 
 //新增紀錄
-app.post("/api/AddData", async (req, res) => {
+router.post("/AddData", async (req, res) => {
   try {
     const { category, amount, description, type, date } = req.body;
 
@@ -125,7 +123,7 @@ app.post("/api/AddData", async (req, res) => {
 });
 
 //刪除紀錄
-app.delete(`/api/deleteData/:id`, async (req, res) => {
+router.delete(`/deleteData/:id`, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await query(
@@ -155,7 +153,7 @@ app.delete(`/api/deleteData/:id`, async (req, res) => {
 });
 
 //編輯記錄
-app.put(`/api/update/:id`, async (req, res) => {
+router.put(`/update/:id`, async (req, res) => {
   try {
     let { key, value } = req.body;
     const { id } = req.params;
@@ -229,3 +227,5 @@ app.put(`/api/update/:id`, async (req, res) => {
     });
   }
 });
+
+export default router;

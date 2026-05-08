@@ -9,13 +9,18 @@ import {
   getSumDataDb,
   updateDataDb,
 } from "../repository/repository.js";
-import { dateRange } from "../service/service.js";
+import { addLogic, getDataLogic } from "../service/service.js";
 
 export const getData = async (req, res) => {
-  const data = await dateRange(req.query.start, req.query.end);
+  const { result, sumData, categoryType } = await getDataLogic(
+    req.query.start,
+    req.query.end,
+  );
 
   res.json({
-    ...data,
+    dataSet: result,
+    sumData: sumData,
+    categoryObj: categoryType,
     state: true,
     message: "資料取得成功",
   });
@@ -23,13 +28,7 @@ export const getData = async (req, res) => {
 
 export const AddData = async (req, res) => {
   const { category, amount, description, type, date } = req.body;
-  const result = await insertAddDataDb(
-    category,
-    amount,
-    description,
-    type,
-    date,
-  );
+  const result = await addLogic(category, amount, description, type, date);
 
   res.status(201).json({
     dataSet: result,

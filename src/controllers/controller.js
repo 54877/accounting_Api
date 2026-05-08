@@ -12,10 +12,8 @@ import {
 import { addLogic, getDataLogic } from "../service/service.js";
 
 export const getData = async (req, res) => {
-  const { result, sumData, categoryType } = await getDataLogic(
-    req.query.start,
-    req.query.end,
-  );
+  const { start, end } = req.query;
+  const { result, sumData, categoryType } = await getDataLogic(start, end);
 
   res.json({
     dataSet: result,

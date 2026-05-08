@@ -1,7 +1,7 @@
 // @ts-check
 import express from "express";
 import cors from "cors";
-import router from "./routes.js";
+import router from "./routes/router.js";
 const app = express();
 
 // 解析 JSON 格式的請求體

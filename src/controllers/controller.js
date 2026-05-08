@@ -1,20 +1,8 @@
-import { query } from "./db.js";
+import { query } from "../db.js";
 import dayjs from "dayjs";
-import express from "express";
-//TODO 不易擴充
-//TODO 邏輯不清晰
-//TODO 規則不夠集中
-//TODO 做JAVA SPRING版
-const router = express.Router();
-const dateRule = (day) => {
-  return (
-    typeof day !== "string" ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(day) ||
-    !dayjs(day, "YYYY-MM-DD", true).isValid()
-  );
-};
-// 取得所有支出紀錄
-router.get("/expenses", async (req, res) => {
+import { dateRule } from "../utils/Shared.js";
+
+export const getData = async (req, res) => {
   try {
     let { start, end } = req.query;
 
@@ -70,8 +58,6 @@ router.get("/expenses", async (req, res) => {
     const categoryObj = Object.fromEntries(
       categoryType.rows.map((item) => [item.category, Number(item.total)]),
     );
-    console.log("QUERY:", req.query);
-    console.log("RESULT:", result.rows);
     res.json({
       dataSet: result.rows,
       sumData: sumData.rows[0],
@@ -83,10 +69,9 @@ router.get("/expenses", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "資料庫連線失敗" });
   }
-});
+};
 
-//新增紀錄
-router.post("/AddData", async (req, res) => {
+export const AddData = async (req, res) => {
   try {
     const { category, amount, description, type, date } = req.body;
 
@@ -120,10 +105,9 @@ router.post("/AddData", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "資料庫連線失敗" });
   }
-});
+};
 
-//刪除紀錄
-router.delete(`/deleteData/:id`, async (req, res) => {
+export const deleteData = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await query(
@@ -150,10 +134,9 @@ router.delete(`/deleteData/:id`, async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "資料庫連接失敗" });
   }
-});
+};
 
-//編輯記錄
-router.put(`/update/:id`, async (req, res) => {
+export const updateData = async (req, res) => {
   try {
     let { key, value } = req.body;
     const { id } = req.params;
@@ -226,6 +209,4 @@ router.put(`/update/:id`, async (req, res) => {
       error: "資料庫連線失敗",
     });
   }
-});
-
-export default router;
+};

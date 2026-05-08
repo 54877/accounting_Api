@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import router from "./routes/router.js";
+import { errorHandler } from "./error.js";
 const app = express();
 
 // 解析 JSON 格式的請求體
@@ -14,5 +15,5 @@ app.use(
 );
 
 app.use("/api", router);
-
+app.use(errorHandler);
 export default app;

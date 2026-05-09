@@ -57,49 +57,7 @@ export const updateData = async (req, res) => {
   let { key, value } = req.body;
   const { id } = req.params;
 
-  const allowedMap = {
-    category: "category",
-    amount: "amount",
-    description: "description",
-    type: "type",
-    date: "date",
-  };
-
-  const errorMap = {
-    category: "項目",
-    amount: "金額",
-    description: "標籤",
-    type: "類型",
-    date: "日期",
-  };
-  const allowed = allowedMap[key];
-  const errorMessage = errorMap[key];
-  if (!allowed) {
-    return res.status(400).json({ error: "欄位異常" });
-  }
-
-  if (typeof value === "string" && !value.trim()) {
-    return res.status(400).json({ error: `請填寫完整${errorMessage}` });
-  }
-
-  if (allowed == "amount") {
-    const num = +value;
-    if (Number.isNaN(num) || num <= 0) {
-      return res.status(400).json({ error: "請填寫正確金額" });
-    }
-    value = num;
-  }
-
-  if (allowed == "date") {
-    if (dateRule(value)) {
-      return res.status(400).json({ error: "請填寫正確日期" });
-    }
-
-    value = dayjs(value).format("YYYY-MM-DD");
-  }
-
-  const result = await updateDataDb(allowed, value, id);
-
+  updateLogic(key, value);
   if (result.rowCount === 0) {
     return res.status(404).json({
       error: "找不到資料，更新失敗",

@@ -34,7 +34,7 @@ export const getDataLogic = async (start, end) => {
 };
 
 export const addLogic = async (category, amount, description, type, date) => {
-  if (!category?.trim() || !amount?.trim() || !description?.trim()){
+  if (!category?.trim() || !amount?.trim() || !description?.trim()) {
     throw new AppError("請填寫完整資料", 400);
   }
   const num = +amount;
@@ -51,5 +51,48 @@ export const addLogic = async (category, amount, description, type, date) => {
     type,
     formatted_date,
   );
+  return result;
+};
+
+export const updateLogic = async (key, value) => {
+  const allowedMap = {
+    category: "category",
+    amount: "amount",
+    description: "description",
+    type: "type",
+    date: "date",
+  };
+
+  const errorMap = {
+    category: "項目",
+    amount: "金額",
+    description: "標籤",
+    type: "類型",
+    date: "日期",
+  };
+  const allowed = allowedMap[key];
+  const errorMessage = errorMap[key];
+  if (!allowed) throw new AppError("欄位異常", 400);
+
+  if (typeof value === "string" && !value.trim())
+    throw new AppError(`請填寫完整${errorMessage}`, 400);
+
+  if (allowed == "amount") {
+    const num = +value;
+    if (Number.isNaN(num) || num <= 0) {
+      throw new AppError(`請填寫正確${errorMessage}`, 400);
+    }
+    value = num;
+  }
+
+  if (allowed == "date") {
+    if (dateRule(value)) {
+      throw new AppError(`請填寫正確${errorMessage}`, 400);
+    }
+
+    value = dayjs(value).format("YYYY-MM-DD");
+  }
+
+  const result = await updateDataDb(allowed, value, id);
   return result;
 };

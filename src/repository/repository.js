@@ -46,11 +46,11 @@ export const insertAddDataDb = async (
   amount,
   description,
   type,
-  formattedDate,
+  formatted_date,
 ) => {
   const res = await query(
-    "INSERT INTO expenses (category , amount , description , type , formattedDate) VALUES ($1 , $2 , $3 , $4 , $5)  RETURNING *",
-    [category, amount, description, type, formattedDate],
+    "INSERT INTO expenses (category , amount , description , type , date) VALUES ($1 , $2 , $3 , $4 , $5)  RETURNING *",
+    [category, amount, description, type, formatted_date],
   );
   return res.rows[0];
 };

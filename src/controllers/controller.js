@@ -25,7 +25,7 @@ export const getData = async (req, res) => {
 };
 
 export const AddData = async (req, res) => {
-  const { category, amount, description, type, date } = req.body;
+  const { category, amount, description, type, date } = req.body || {};
   const result = await addLogic(category, amount, description, type, date);
 
   res.status(201).json({

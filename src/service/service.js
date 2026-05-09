@@ -34,21 +34,22 @@ export const getDataLogic = async (start, end) => {
 };
 
 export const addLogic = async (category, amount, description, type, date) => {
-  if (!category?.trim() || !amount?.trim() || !description?.trim())
+  if (!category?.trim() || !amount?.trim() || !description?.trim()){
     throw new AppError("請填寫完整資料", 400);
+  }
   const num = +amount;
 
   if (Number.isNaN(num) || num <= 0) throw new AppError("請填寫正確金額", 400);
 
   if (dateRule(date)) throw new AppError("請填寫正確日期", 400);
 
-  const formattedDate = dayjs(date).format("YYYY-MM-DD");
+  const formatted_date = dayjs(date).format("YYYY-MM-DD");
   const result = await insertAddDataDb(
     category,
     amount,
     description,
     type,
-    formattedDate,
+    formatted_date,
   );
   return result;
 };

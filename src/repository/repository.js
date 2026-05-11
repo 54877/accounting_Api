@@ -1,5 +1,4 @@
 import { query } from "../db.js";
-import dayjs from "dayjs";
 
 export const getDataResDb = async (start, end) => {
   const res = await query(

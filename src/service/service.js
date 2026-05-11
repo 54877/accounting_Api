@@ -1,10 +1,12 @@
 import dayjs from "dayjs";
 import { dateRule } from "../utils/Shared.js";
 import {
+  deleteDataDb,
   getCategoryTypeDb,
   getDataResDb,
   getSumDataDb,
   insertAddDataDb,
+  updateDataDb,
 } from "../repository/repository.js";
 import { AppError } from "../error.js";
 
@@ -96,5 +98,16 @@ export const updateLogic = async (key, value, id) => {
   }
 
   const result = await updateDataDb(allowed, value, id);
+  if (result.rowCount === 0) {
+    throw new AppError("找不到資料，更新失敗", 404);
+  }
+  return result;
+};
+
+export const deleteLogic = async (id) => {
+  const result = await deleteDataDb(id);
+  if (result.rowCount === 0) {
+    throw new AppError("找不到資料，刪除失敗", 404);
+  }
   return result;
 };

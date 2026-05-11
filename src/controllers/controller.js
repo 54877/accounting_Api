@@ -1,15 +1,9 @@
-import { query } from "../db.js";
-import dayjs from "dayjs";
-import { dateRule } from "../utils/Shared.js";
 import {
-  getDataResDb,
-  getCategoryTypeDb,
-  insertAddDataDb,
-  deleteDataDb,
-  getSumDataDb,
-  updateDataDb,
-} from "../repository/repository.js";
-import { addLogic, getDataLogic, updateLogic } from "../service/service.js";
+  addLogic,
+  deleteLogic,
+  getDataLogic,
+  updateLogic,
+} from "../service/service.js";
 
 export const getData = async (req, res) => {
   const { start, end } = req.query;
@@ -38,19 +32,11 @@ export const AddData = async (req, res) => {
 export const deleteData = async (req, res) => {
   const { id } = req.params;
 
-  const result = await deleteDataDb(id);
-
-  if (result.rowCount === 0) {
-    return res.status(404).json({
-      message: "找不到資料",
-      state: false,
-    });
-  }
+  await deleteLogic(id);
 
   res.status(200).json({
     message: "資料刪除成功",
     state: "true",
-    data: result,
   });
 };
 
@@ -58,12 +44,7 @@ export const updateData = async (req, res) => {
   let { key, value } = req.body;
   const { id } = req.params;
 
-  const result = await updateLogic(key, value, id);
-  if (result.rowCount === 0) {
-    return res.status(404).json({
-      error: "找不到資料，更新失敗",
-    });
-  }
+  await updateLogic(key, value, id);
 
   res.status(200).json({
     message: "更新成功",

@@ -37,6 +37,7 @@ export const AddData = async (req, res) => {
 
 export const deleteData = async (req, res) => {
   const { id } = req.params;
+
   const result = await deleteDataDb(id);
 
   if (result.rowCount === 0) {

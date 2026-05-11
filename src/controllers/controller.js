@@ -57,7 +57,7 @@ export const updateData = async (req, res) => {
   let { key, value } = req.body;
   const { id } = req.params;
 
-  updateLogic(key, value);
+  const result = await updateLogic(key, value, id);
   if (result.rowCount === 0) {
     return res.status(404).json({
       error: "找不到資料，更新失敗",

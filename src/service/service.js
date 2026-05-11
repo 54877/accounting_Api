@@ -54,7 +54,7 @@ export const addLogic = async (category, amount, description, type, date) => {
   return result;
 };
 
-export const updateLogic = async (key, value) => {
+export const updateLogic = async (key, value, id) => {
   const allowedMap = {
     category: "category",
     amount: "amount",
@@ -72,6 +72,8 @@ export const updateLogic = async (key, value) => {
   };
   const allowed = allowedMap[key];
   const errorMessage = errorMap[key];
+  console.log("allowed", allowed);
+  console.log("errorMessage", errorMessage);
   if (!allowed) throw new AppError("欄位異常", 400);
 
   if (typeof value === "string" && !value.trim())

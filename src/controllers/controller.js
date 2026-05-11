@@ -9,7 +9,7 @@ import {
   getSumDataDb,
   updateDataDb,
 } from "../repository/repository.js";
-import { addLogic, getDataLogic } from "../service/service.js";
+import { addLogic, getDataLogic, updateLogic } from "../service/service.js";
 
 export const getData = async (req, res) => {
   const { start, end } = req.query;

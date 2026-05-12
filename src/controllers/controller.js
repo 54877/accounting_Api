@@ -2,6 +2,7 @@ import {
   addLogic,
   deleteLogic,
   getDataLogic,
+  registerUserLogic,
   updateLogic,
 } from "../service/service.js";
 
@@ -48,6 +49,17 @@ export const updateData = async (req, res) => {
 
   res.status(200).json({
     message: "更新成功",
+    state: true,
+  });
+};
+
+export const registerUser = async (req, res) => {
+  const { account, password } = req.body || {};
+
+  await registerUserLogic(account, password);
+
+  res.status(201).json({
+    message: "註冊成功",
     state: true,
   });
 };

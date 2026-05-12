@@ -1,4 +1,5 @@
 import { query } from "../db.js";
+import { AppError } from "../error.js";
 
 export const getDataResDb = async (start, end) => {
   const res = await query(
@@ -77,4 +78,17 @@ export const updateDataDb = async (allowed, value, id) => {
     [value, id],
   );
   return res;
+};
+
+export const registerUserDb = async (account, password) => {
+  try {
+    const result = await query(
+      `INSERT INTO users_table (account, password) VALUES ($1, $2) RETURNING id , account`,
+      [account, password],
+    );
+
+    return result.rows[0];
+  } catch (err) {
+    if (err.code === "23505") throw new AppError("使用者已存在", 400);
+  }
 };

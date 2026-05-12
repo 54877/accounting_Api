@@ -3,12 +3,10 @@ import {
   AddData,
   deleteData,
   getData,
+  registerUser,
   updateData,
 } from "../controllers/controller.js";
-//TODO 不易擴充
-//TODO 邏輯不清晰
-//TODO 規則不夠集中
-//TODO 做JAVA SPRING版
+
 const router = express.Router();
 
 // 取得所有支出紀錄
@@ -22,5 +20,8 @@ router.delete(`/deleteData/:id`, deleteData);
 
 //編輯記錄
 router.put(`/update/:id`, updateData);
+
+//註冊帳號
+router.post("/register", registerUser);
 
 export default router;

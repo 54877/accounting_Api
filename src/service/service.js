@@ -6,9 +6,11 @@ import {
   getDataResDb,
   getSumDataDb,
   insertAddDataDb,
+  registerUserDb,
   updateDataDb,
 } from "../repository/repository.js";
 import { AppError } from "../error.js";
+import { use } from "react";
 
 export const getDataLogic = async (start, end) => {
   start = start === "" ? undefined : start;
@@ -109,5 +111,25 @@ export const deleteLogic = async (id) => {
   if (result.rowCount === 0) {
     throw new AppError("找不到資料，刪除失敗", 404);
   }
+  return result;
+};
+
+export const registerUserLogic = async (account, password) => {
+  const ruler =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
+  if (!account?.trim() || !password?.trim())
+    throw new AppError("請填寫完整資料", 400);
+
+  if (!ruler.test(password) || password.length > 20)
+    throw new AppError(
+      "密碼需包含至少一個大寫字母、一個小寫字母、一個數字和一個特殊字符，且長度至少為8位且不超過20位",
+      400,
+    );
+
+  if (account.length > 20 || account.length < 8)
+    throw new AppError("帳號長度需介於8到20字元", 400);
+  const hashPassword = await bcrypt.hash(password, 10);
+
+  const result = await registerUserDb(account, hashPassword);
   return result;
 };

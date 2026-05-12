@@ -9,8 +9,8 @@ import {
   registerUserDb,
   updateDataDb,
 } from "../repository/repository.js";
+import bcrypt from "bcrypt";
 import { AppError } from "../error.js";
-import { use } from "react";
 
 export const getDataLogic = async (start, end) => {
   start = start === "" ? undefined : start;

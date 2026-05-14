@@ -26,6 +26,6 @@ router.put(`/update/:id`, updateData);
 router.post("/register", registerUser);
 
 //登入帳號
-router.get("/Login", LoginUser);
+router.post("/Login", LoginUser);
 
 export default router;

@@ -97,8 +97,8 @@ export const loginUserDb = async (account, password) => {
   const result = await query(
     `
     SELECT * FROM
-    user_table
+    users_table
     `,
   );
-  return result.rows[0];
+  return result.rows;
 };

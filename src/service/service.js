@@ -6,6 +6,7 @@ import {
   getDataResDb,
   getSumDataDb,
   insertAddDataDb,
+  loginUserDb,
   registerUserDb,
   updateDataDb,
 } from "../repository/repository.js";
@@ -137,6 +138,16 @@ export const loginUserLogin = async (account, password) => {
   LoginRule(account, password);
 
   const result = await loginUserDb(account, password);
+  const user = result.find((e) => e.account == account);
+
+  if (!user) {
+    throw new AppError("帳號不存在", 400);
+  }
+  const psd = await bcrypt.compare(password, user.password);
+
+  if (!psd) {
+    throw new AppError("密碼錯誤", 400);
+  }
 
   return result;
 };

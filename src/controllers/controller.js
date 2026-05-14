@@ -2,6 +2,7 @@ import {
   addLogic,
   deleteLogic,
   getDataLogic,
+  loginUserLogin,
   registerUserLogic,
   updateLogic,
 } from "../service/service.js";
@@ -69,7 +70,7 @@ export const LoginUser = async (req, res) => {
 
   await loginUserLogin(account, password);
 
-  res.status(200).jason({
+  res.status(201).json({
     message: "登入成功",
     state: true,
   });

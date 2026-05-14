@@ -7,3 +7,8 @@ export const dateRule = (day) => {
     !dayjs(day, "YYYY-MM-DD", true).isValid()
   );
 };
+
+export const LoginRule = (account, password) => {
+  if (!account?.trim() || !password?.trim())
+    throw new AppError("請填寫完整資料", 400);
+};

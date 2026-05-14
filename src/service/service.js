@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { dateRule } from "../utils/Shared.js";
+import { dateRule, LoginRule } from "../utils/Shared.js";
 import {
   deleteDataDb,
   getCategoryTypeDb,
@@ -117,8 +117,7 @@ export const deleteLogic = async (id) => {
 export const registerUserLogic = async (account, password) => {
   const ruler =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
-  if (!account?.trim() || !password?.trim())
-    throw new AppError("請填寫完整資料", 400);
+  LoginRule(account, password);
 
   if (!ruler.test(password) || password.length > 20)
     throw new AppError(
@@ -131,5 +130,13 @@ export const registerUserLogic = async (account, password) => {
   const hashPassword = await bcrypt.hash(password, 10);
 
   const result = await registerUserDb(account, hashPassword);
+  return result;
+};
+
+export const loginUserLogin = async (account, password) => {
+  LoginRule(account, password);
+
+  const result = await loginUserDb(account, password);
+
   return result;
 };

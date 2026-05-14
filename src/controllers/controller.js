@@ -63,3 +63,14 @@ export const registerUser = async (req, res) => {
     state: true,
   });
 };
+
+export const LoginUser = async (req, res) => {
+  const { account, password } = req.body || {};
+
+  await loginUserLogin(account, password);
+
+  res.status(200).jason({
+    message: "登入成功",
+    state: true,
+  });
+};

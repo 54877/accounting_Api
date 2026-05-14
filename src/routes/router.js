@@ -3,6 +3,7 @@ import {
   AddData,
   deleteData,
   getData,
+  LoginUser,
   registerUser,
   updateData,
 } from "../controllers/controller.js";
@@ -23,5 +24,8 @@ router.put(`/update/:id`, updateData);
 
 //註冊帳號
 router.post("/register", registerUser);
+
+//登入帳號
+router.get("/Login", LoginUser);
 
 export default router;

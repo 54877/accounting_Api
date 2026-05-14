@@ -92,3 +92,13 @@ export const registerUserDb = async (account, password) => {
     if (err.code === "23505") throw new AppError("使用者已存在", 400);
   }
 };
+
+export const loginUserDb = async (account, password) => {
+  const result = await query(
+    `
+    SELECT * FROM
+    user_table
+    `,
+  );
+  return result.rows[0];
+};

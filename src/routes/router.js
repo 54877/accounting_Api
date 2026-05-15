@@ -7,8 +7,11 @@ import {
   registerUser,
   updateData,
 } from "../controllers/controller.js";
+import { authMiddleware } from "../mIddleware/auth.js";
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 // 取得所有支出紀錄
 router.get("/expenses", getData);

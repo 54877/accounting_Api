@@ -12,6 +12,7 @@ import {
 } from "../repository/repository.js";
 import bcrypt from "bcrypt";
 import { AppError } from "../error.js";
+import { generateAccessToken } from "../utils/jwt.js";
 
 export const getDataLogic = async (start, end) => {
   start = start === "" ? undefined : start;
@@ -134,6 +135,7 @@ export const registerUserLogic = async (account, password) => {
   return result;
 };
 
+//TODO 讓USER改成資料庫提供
 export const loginUserLogin = async (account, password) => {
   LoginRule(account, password);
 
@@ -149,5 +151,10 @@ export const loginUserLogin = async (account, password) => {
     throw new AppError("密碼錯誤", 400);
   }
 
-  return result;
+  const accessToken = generateAccessToken({
+    id: user.id,
+    account: user.account,
+  });
+
+  return accessToken;
 };

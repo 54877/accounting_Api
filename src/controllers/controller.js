@@ -68,9 +68,10 @@ export const registerUser = async (req, res) => {
 export const LoginUser = async (req, res) => {
   const { account, password } = req.body || {};
 
-  await loginUserLogin(account, password);
+  const accessToken = await loginUserLogin(account, password);
 
-  res.status(201).json({
+  res.status(200).json({
+    accessToken,
     message: "登入成功",
     state: true,
   });

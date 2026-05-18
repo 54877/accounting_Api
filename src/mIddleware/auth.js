@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -9,7 +8,6 @@ if (!JWT_SECRET) {
 export const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-
     if (!authHeader) {
       return res.status(401).json({
         message: "未登入",

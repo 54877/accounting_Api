@@ -70,7 +70,7 @@ export const LoginUser = async (req, res) => {
 
   const accessToken = await loginUserLogin(account, password);
 
-  res.status(200).json({
+  res.status(201).json({
     accessToken,
     message: "登入成功",
     state: true,

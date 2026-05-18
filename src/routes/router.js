@@ -3,13 +3,11 @@ import {
   AddData,
   deleteData,
   getData,
-  LoginUser,
-  registerUser,
   updateData,
 } from "../controllers/controller.js";
 import { authMiddleware } from "../mIddleware/auth.js";
 
-const router = express.Router();
+export const router = express.Router();
 
 router.use(authMiddleware);
 
@@ -24,11 +22,3 @@ router.delete(`/deleteData/:id`, deleteData);
 
 //編輯記錄
 router.put(`/update/:id`, updateData);
-
-//註冊帳號
-router.post("/register", registerUser);
-
-//登入帳號
-router.post("/Login", LoginUser);
-
-export default router;

@@ -9,7 +9,6 @@ import {
 
 export const getData = async (req, res) => {
   const { start, end } = req.query;
-  console.log(req.user);
   const { result, sumData, categoryType } = await getDataLogic(
     start,
     end,
@@ -27,7 +26,14 @@ export const getData = async (req, res) => {
 
 export const AddData = async (req, res) => {
   const { category, amount, description, type, date } = req.body || {};
-  const result = await addLogic(category, amount, description, type, date);
+  const result = await addLogic(
+    category,
+    amount,
+    description,
+    type,
+    date,
+    req.user.id,
+  );
 
   res.status(201).json({
     dataSet: result,

@@ -39,10 +39,22 @@ export const getDataLogic = async (start, end, user_id) => {
   return { result, sumData, categoryType };
 };
 
-export const addLogic = async (category, amount, description, type, date) => {
+export const addLogic = async (
+  category,
+  amount,
+  description,
+  type,
+  date,
+  user_id,
+) => {
   if (!category?.trim() || !amount?.trim() || !description?.trim()) {
     throw new AppError("請填寫完整資料", 400);
   }
+
+  if (!user_id) {
+    throw new AppError("請重新登入", 400);
+  }
+
   const num = +amount;
 
   if (Number.isNaN(num) || num <= 0) throw new AppError("請填寫正確金額", 400);
@@ -56,6 +68,7 @@ export const addLogic = async (category, amount, description, type, date) => {
     description,
     type,
     formatted_date,
+    user_id,
   );
   return result;
 };
@@ -146,7 +159,7 @@ export const loginUserLogin = async (account, password) => {
     throw new AppError("帳號不存在", 400);
   }
   const psd = await bcrypt.compare(password, user.password);
-
+  console.log(user.password);
   if (!psd) {
     throw new AppError("密碼錯誤", 400);
   }

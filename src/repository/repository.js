@@ -12,28 +12,28 @@ export const getDataResDb = async (start, end, user_id) => {
   return res.rows;
 };
 
-export const getSumDataDb = async (start, end) => {
+export const getSumDataDb = async (start, end, user_id) => {
   const res = await query(
     `SELECT 
       SUM(CASE WHEN type='income' THEN amount ELSE 0 END) AS "incomeTotal",
       SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS "expenseTotal",
       SUM(CASE WHEN type='income' THEN amount ELSE -amount END) AS "balance"
       FROM expenses
-      WHERE date >= $1 AND date <= $2`,
-    [start, end],
+      WHERE date >= $1 AND date <= $2 AND user_id = $3`,
+    [start, end, user_id],
   );
   return res.rows[0];
 };
 
-export const getCategoryTypeDb = async (start, end) => {
+export const getCategoryTypeDb = async (start, end, user_id) => {
   const res = await query(
     `
         SELECT category, SUM(amount) AS total
         FROM expenses
-        WHERE type = 'expense' AND date >= $1 AND date <= $2
+        WHERE type = 'expense' AND date >= $1 AND date <= $2 AND user_id = $3
         GROUP BY category
         `,
-    [start, end],
+    [start, end, user_id],
   );
 
   return Object.fromEntries(

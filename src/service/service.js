@@ -9,6 +9,7 @@ import {
   loginUserDb,
   registerUserDb,
   updateDataDb,
+  userDb,
 } from "../repository/repository.js";
 import bcrypt from "bcrypt";
 import { AppError } from "../error.js";
@@ -148,18 +149,17 @@ export const registerUserLogic = async (account, password) => {
   return result;
 };
 
-//TODO 讓USER改成資料庫提供
 export const loginUserLogin = async (account, password) => {
   LoginRule(account, password);
 
   const result = await loginUserDb(account, password);
-  const user = result.find((e) => e.account == account);
+  const user = await userDb(account);
 
   if (!user) {
     throw new AppError("帳號不存在", 400);
   }
   const psd = await bcrypt.compare(password, user.password);
-  console.log(user.password);
+
   if (!psd) {
     throw new AppError("密碼錯誤", 400);
   }

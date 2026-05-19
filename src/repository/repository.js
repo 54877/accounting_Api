@@ -103,3 +103,16 @@ export const loginUserDb = async (account, password) => {
   );
   return result.rows;
 };
+
+export const userDb = async (account) => {
+  const result = await query(
+    `
+    SELECT * FROM
+    users_table
+    WHERE account =$1
+    `,
+    [account],
+  );
+
+  return result.rows[0];
+};

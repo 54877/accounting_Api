@@ -1,13 +1,13 @@
 import { query } from "../db.js";
 import { AppError } from "../error.js";
 
-export const getDataResDb = async (start, end) => {
+export const getDataResDb = async (start, end, user_id) => {
   const res = await query(
     `SELECT * FROM expenses
-           WHERE date >= $1 AND date <= $2
+           WHERE date >= $1 AND date <= $2 AND user_id = $3
            ORDER BY date ASC
           `,
-    [start, end],
+    [start, end, user_id],
   );
   return res.rows;
 };

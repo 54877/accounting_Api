@@ -9,7 +9,12 @@ import {
 
 export const getData = async (req, res) => {
   const { start, end } = req.query;
-  const { result, sumData, categoryType } = await getDataLogic(start, end);
+  console.log(req.user);
+  const { result, sumData, categoryType } = await getDataLogic(
+    start,
+    end,
+    req.user.id,
+  );
 
   res.json({
     dataSet: result,

@@ -14,7 +14,7 @@ import bcrypt from "bcrypt";
 import { AppError } from "../error.js";
 import { generateAccessToken } from "../utils/jwt.js";
 
-export const getDataLogic = async (start, end) => {
+export const getDataLogic = async (start, end, user_id) => {
   start = start === "" ? undefined : start;
   end = end === "" ? undefined : end;
 
@@ -33,9 +33,9 @@ export const getDataLogic = async (start, end) => {
   if (start && end && dayjs(start).isAfter(dayjs(end)))
     throw new AppError("開始日期不能大於結束日期", 400);
 
-  const result = await getDataResDb(start, end);
-  const sumData = await getSumDataDb(start, end);
-  const categoryType = await getCategoryTypeDb(start, end);
+  const result = await getDataResDb(start, end, user_id);
+  const sumData = await getSumDataDb(start, end, user_id);
+  const categoryType = await getCategoryTypeDb(start, end, user_id);
   return { result, sumData, categoryType };
 };
 

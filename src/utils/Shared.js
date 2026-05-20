@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { AppError } from "../error";
 
 export const dateRule = (day) => {
   return (

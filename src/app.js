@@ -20,6 +20,8 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   }),
 );
+//預先處理 OPTIONS
+app.options("*", cors());
 // 解析 JSON 格式的請求體
 app.use(express.json());
 

@@ -7,8 +7,6 @@ import { authRouter } from "./routes/login_router.js";
 
 const app = express();
 
-// 解析 JSON 格式的請求體
-app.use(express.json());
 //跨網域設定
 app.use(
   cors({
@@ -22,6 +20,8 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   }),
 );
+// 解析 JSON 格式的請求體
+app.use(express.json());
 
 app.use("/api/auth", authRouter);
 app.use("/api", router);

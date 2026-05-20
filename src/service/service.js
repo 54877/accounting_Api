@@ -12,8 +12,9 @@ import {
   userDb,
 } from "../repository/repository.js";
 import bcrypt from "bcrypt";
-import { AppError } from "../error.js";
+
 import { generateAccessToken } from "../utils/jwt.js";
+import { AppError } from "../error.js";
 
 export const getDataLogic = async (start, end, user_id) => {
   start = start === "" ? undefined : start;

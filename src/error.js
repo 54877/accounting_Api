@@ -11,6 +11,7 @@ export const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
 
   res.status(statusCode).json({
-    error: err.message || "伺服器錯誤",
+    state: false,
+    message: err.message || "伺服器錯誤",
   });
 };

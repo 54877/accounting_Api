@@ -12,7 +12,11 @@ app.use(express.json());
 //跨網域設定
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://54877.github.io"],
+    origin: [
+      "http://localhost:5173",
+      "https://54877.github.io",
+      "http://localhost:5174",
+    ],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
